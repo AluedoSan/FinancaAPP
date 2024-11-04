@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "financaapp"
+name = "financeapp"
 version = "0.1.0"
 description = ""
 authors = ["Alexander Ueno <82620144+AluedoSan@users.noreply.github.com>"]
