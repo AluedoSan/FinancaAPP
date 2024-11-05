@@ -106,7 +106,7 @@ with col1_historic:
         st.write("HISTÓRICO")
         historic = get_historic()
         df = pd.DataFrame(historic, columns=["Data", "Descrição", "Valor"])
-        st.table(df)
+        st.table(df.style.format({"Valor": "{:.2f}"}))
 
 with col2_delete:
     if st.button("Limpar Histórico"):
