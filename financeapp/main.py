@@ -18,6 +18,15 @@ def get_current_balance():
     conn.close()
     return result if result else 0.0
 
+# Função para obter o saldo da caxinha
+def get_current_balance_reserve():
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT SUM(amount_reserve) FROM reserve")
+    result = c.fetchone()[0]
+    conn.close()
+    return result if result else 0.0
+
 # Função para obter histórico
 def get_historic():
     conn = get_db_connection()
@@ -36,6 +45,15 @@ def add_transaction(description, amount):
     conn.commit()
     conn.close()
 
+# Função para adicionar transação para a caixinha
+def add_transaction(description, amount):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("INSERT INTO reserve (date_reserve, description, amount_reserve) VALUES (?, ?, ?)", 
+              (date.today().strftime("%d/%m/%Y"), description, amount))
+    conn.commit()
+    conn.close()
+
 # Função para limpar o banco de dados
 def clear_database():
     conn = sqlite3.connect('finances.db')
@@ -48,7 +66,7 @@ def clear_database():
 
 # Obtendo saldo atual
 saldo_atual = get_current_balance()
-
+saldo_reserve = get_current_balance_reserve()
 # Título
 st.title("Dashboard de Finanças")
 
@@ -60,7 +78,7 @@ with col1_saldo:
 
     if not st.session_state.initial_balance_set:
         st.subheader("Definir Saldo Inicial")
-        saldo = st.number_input("Insira seu saldo inicial", min_value=0.0, step=0.01, format="%.2f")
+        saldo = st.number_input("Insira seu saldo inicial:", min_value=0.0, step=0.01, format="%.2f")
         if st.button("Salvar Saldo Inicial"):
             add_transaction("Saldo Inicial", saldo)
             st.session_state.initial_balance_set = True
@@ -70,7 +88,19 @@ with col1_saldo:
     st.subheader(f"Seu saldo atual: R$ {saldo_atual:.2f}")
 
 with col2_caixinha:
-    st.subheader("Caixinha")
+    st.subheader("Reserva")
+    if "initial_balance_set" not in st.session_state:
+        st.session_state.initial_balance_set = False
+
+    if not st.session_state.initial_balance_set:
+        saldo_caixinha = st.number_input("Saldo reserva:", min_value=0.0, step=0.01, format="%.2f")
+        if st.button("Salvar"):
+            add_transaction("Saldo caixinha", saldo_caixinha)
+            st.session_state.initial_balance_set = True
+            st.experimental_set_query_params(rerun='1')
+
+    # Mostrar saldo da caixnha atual
+    st.subheader(f"Seu saldo atual: R$ {saldo_reserve:.2f}")
 
 # Entrada e Saída
 st.divider()

@@ -1,3 +1,5 @@
 
 financeapp/finances.db
 /streamlit
+*.db
+financeapp/teste.py
