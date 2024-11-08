@@ -10,5 +10,4 @@
 <ul>
   <li>Python==3.12</li>
   <li>Streamlit==1.39.0</li>
-  <li>SQLAlchemy==2.0.36</li>
 </ul>
