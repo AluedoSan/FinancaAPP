@@ -3,7 +3,6 @@ from datetime import date
 import sqlite3
 import pandas as pd
 
-
 # Função para conectar ao banco de dados
 def get_db_connection():
     conn = sqlite3.connect('finances.db')
