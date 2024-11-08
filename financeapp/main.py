@@ -6,6 +6,20 @@ import pandas as pd
 # Função para conectar ao banco de dados
 def get_db_connection():
     conn = sqlite3.connect('finances.db')
+    con = conn.execute("""CREATE TABLE IF NO EXISTS transactions(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    date TEXT NOT NULL,
+                    description TEXT,
+                    amount REAL 
+                       )""")
+    con.commit()
+    con.execute = ("""CREATE TABLE IF NOT EXISTS reserve (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date_reserve TEXT NOT NULL,
+                description TEXT,
+                amount_reserve REAL 
+                )""")
+    con.commit()
     return conn
 
 # Função para obter saldo atual
