@@ -2,24 +2,33 @@ import streamlit as st
 from datetime import date
 import sqlite3
 import pandas as pd
+import os
 
+# Criar o banco de dados caso não exista
+caminho_db = os.path.abspath("finances.db")
+con = sqlite3.connect(caminho_db)
+cur = con.cursor()
+a = ("""CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            description TEXT,
+            amount REAL 
+            )""")
+cur.execute(a)
+con.commit()
+a = ("""CREATE TABLE IF NOT EXISTS reserve (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date_reserve TEXT NOT NULL,
+            description TEXT,
+            amount_reserve REAL 
+            )""")
+cur.execute(a)
+con.commit()
+cur.close()
+con.close()
 # Função para conectar ao banco de dados
 def get_db_connection():
     conn = sqlite3.connect('finances.db')
-    con = conn.execute("""CREATE TABLE IF NO EXISTS transactions(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    date TEXT NOT NULL,
-                    description TEXT,
-                    amount REAL 
-                       )""")
-    con.commit()
-    con.execute = ("""CREATE TABLE IF NOT EXISTS reserve (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                date_reserve TEXT NOT NULL,
-                description TEXT,
-                amount_reserve REAL 
-                )""")
-    con.commit()
     return conn
 
 # Função para obter saldo atual
